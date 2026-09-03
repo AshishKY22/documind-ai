@@ -8,33 +8,66 @@ datasource db {
 }
 
 model User {
-  id            String    @id @default(cuid())
-  clerkId       String    @unique
-  email         String    @unique
-  name          String?
-  createdAt     DateTime  @default(now())
-  updatedAt     DateTime  @updatedAt
-  
-  documents     Document[]
-  chats         Chat[]
-  subscription  Subscription?
+  id           String        @id @default(cuid())
+  clerkId      String        @unique
+  email        String        @unique
+  name         String?
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
+  chats        Chat[]
+  documents    Document[]
+  subscription Subscription?
 }
 
 model Document {
-  id          String   @id @default(cuid())
-  name        String
-  url         String
-  key         String   
-  size        Int      
-  status      DocumentStatus @default(PENDING)
+  id                String         @id @default(cuid())
+  name              String
+  url               String
+  key               String
+  size              Int
+  status            DocumentStatus @default(PENDING)
   pineconeNamespace String?
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-  
-  userId      String
-  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  
-  messages    Message[]
+  createdAt         DateTime       @default(now())
+  updatedAt         DateTime       @updatedAt
+  userId            String
+  user              User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+  messages          Message[]
+}
+
+model Chat {
+  id        String    @id @default(cuid())
+  title     String    @default("New Chat")
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  userId    String
+  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  messages  Message[]
+}
+
+model Message {
+  id         String      @id @default(cuid())
+  role       MessageRole
+  content    String
+  sources    Json?
+  createdAt  DateTime    @default(now())
+  chatId     String
+  documentId String?
+  chat       Chat        @relation(fields: [chatId], references: [id], onDelete: Cascade)
+  document   Document?   @relation(fields: [documentId], references: [id])
+}
+
+model Subscription {
+  id                   String             @id @default(cuid())
+  stripeCustomerId     String             @unique
+  stripeSubscriptionId String?            @unique
+  stripePriceId        String?
+  status               SubscriptionStatus @default(INCOMPLETE)
+  tier                 SubscriptionTier   @default(FREE)
+  currentPeriodEnd     DateTime?
+  createdAt            DateTime           @default(now())
+  updatedAt            DateTime           @updatedAt
+  userId               String             @unique
+  user                 User               @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
 enum DocumentStatus {
@@ -44,50 +77,9 @@ enum DocumentStatus {
   FAILED
 }
 
-model Chat {
-  id        String   @id @default(cuid())
-  title     String   @default("New Chat")
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  
-  userId    String
-  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  
-  messages  Message[]
-}
-
-model Message {
-  id        String   @id @default(cuid())
-  role      MessageRole
-  content   String   @db.Text
-  sources   Json?
-  createdAt DateTime @default(now())
-  
-  chatId    String
-  chat      Chat     @relation(fields: [chatId], references: [id], onDelete: Cascade)
-  
-  documentId String?
-  document   Document? @relation(fields: [documentId], references: [id])
-}
-
 enum MessageRole {
   USER
   ASSISTANT
-}
-
-model Subscription {
-  id                String   @id @default(cuid())
-  stripeCustomerId  String   @unique
-  stripeSubscriptionId String? @unique
-  stripePriceId     String?
-  status            SubscriptionStatus @default(INCOMPLETE)
-  tier              SubscriptionTier @default(FREE)
-  currentPeriodEnd  DateTime?
-  createdAt         DateTime @default(now())
-  updatedAt         DateTime @updatedAt
-  
-  userId            String   @unique
-  user              User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
 enum SubscriptionStatus {

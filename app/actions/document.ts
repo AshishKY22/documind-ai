@@ -2,6 +2,7 @@
 
 import { prisma } from "@/lib/prisma";
 import { auth } from "@clerk/nextjs/server";
+import { cookies } from "next/headers";
 
 export async function createDocument(data: {
   name: string;
@@ -10,21 +11,13 @@ export async function createDocument(data: {
   size: number;
 }) {
   const { userId } = await auth();
-  
-  if (!userId) {
-    throw new Error("Unauthorized");
-  }
+  if (!userId) throw new Error("Unauthorized");
 
-  // Find the user in our database using clerkId
   const user = await prisma.user.findUnique({
     where: { clerkId: userId },
   });
+  if (!user) throw new Error("User not found");
 
-  if (!user) {
-    throw new Error("User not found in database");
-  }
-
-  // Create the document record
   const document = await prisma.document.create({
     data: {
       name: data.name,
@@ -35,6 +28,18 @@ export async function createDocument(data: {
       userId: user.id,
     },
   });
+
+  const cookieStore = await cookies();
+  const cookieHeader = cookieStore.toString();
+
+  fetch(`${process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000"}/api/process-document`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Cookie: cookieHeader,
+    },
+    body: JSON.stringify({ documentId: document.id }),
+  }).catch(console.error);
 
   return document;
 }
