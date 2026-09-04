@@ -3,9 +3,11 @@
 import { UploadDropzone } from "@uploadthing/react";
 import { OurFileRouter } from "@/app/api/uploadthing/core";
 import { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
 import { createDocument } from "@/app/actions/document";
 
 export default function DocumentUpload() {
+  const router = useRouter();
   const [uploadStatus, setUploadStatus] = useState<"idle" | "uploading" | "processing" | "ready" | "error">("idle");
   const [documentId, setDocumentId] = useState<string | null>(null);
 
@@ -17,13 +19,15 @@ export default function DocumentUpload() {
       try {
         const res = await fetch(`/api/document-status?id=${documentId}`);
         const data = await res.json();
-        
+
         if (data.status === "READY") {
           setUploadStatus("ready");
           clearInterval(interval);
+          router.refresh();
         } else if (data.status === "FAILED") {
           setUploadStatus("error");
           clearInterval(interval);
+          router.refresh();
         } else if (data.status === "PROCESSING") {
           setUploadStatus("processing");
         }
@@ -33,7 +37,7 @@ export default function DocumentUpload() {
     }, 2000);
 
     return () => clearInterval(interval);
-  }, [documentId, uploadStatus]);
+  }, [documentId, uploadStatus, router]);
 
   return (
     <div className="w-full max-w-xl mx-auto p-6 border-2 border-dashed border-gray-300 rounded-xl hover:border-blue-500 transition-colors">
@@ -43,7 +47,7 @@ export default function DocumentUpload() {
           if (!res || res.length === 0) return;
           const file = res[0];
           setUploadStatus("processing");
-          
+
           try {
             const doc = await createDocument({
               name: file.name,
@@ -52,6 +56,7 @@ export default function DocumentUpload() {
               size: file.size,
             });
             setDocumentId(doc.id);
+            router.refresh();
           } catch (error) {
             console.error("Failed to save document:", error);
             setUploadStatus("error");
@@ -65,7 +70,7 @@ export default function DocumentUpload() {
           setUploadStatus("uploading");
         }}
       />
-      
+
       {uploadStatus === "uploading" && (
         <p className="mt-4 text-center text-blue-600">Uploading to CDN...</p>
       )}
