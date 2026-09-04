@@ -2,9 +2,15 @@
 
 Chat with your documents. Upload PDFs, DOCX, or TXT files and ask questions in natural language — DocuMind reads them, retrieves the relevant passages, and answers with cited sources. It also remembers what you've discussed across sessions, so it can connect information from one document to a conversation you had about a completely different one, weeks apart.
 
+<<<<<<< HEAD
 **Live demo:** [documind-ai-henna.vercel.app](https://documind-ai-henna.vercel.app)
 
 
+=======
+**Live demo:** _add your Vercel URL here_
+
+---
+>>>>>>> 02e1328262aeb8032ba6675f31f780ea413bb3b9
 
 ## What Makes This Different
 
@@ -12,7 +18,11 @@ Most "chat with your documents" apps treat every conversation as an island — c
 
 Ask it something in one document, then open an entirely different document a week later and ask "what did I say my favorite topic was?" — it remembers, without you ever re-explaining yourself. It's the difference between a document Q&A tool and something that actually accumulates knowledge about you over time.
 
+<<<<<<< HEAD
 
+=======
+---
+>>>>>>> 02e1328262aeb8032ba6675f31f780ea413bb3b9
 
 ## Features
 
@@ -59,7 +69,11 @@ Ask it something in one document, then open an entirely different document a wee
 ### Setup
 
 ```bash
+<<<<<<< HEAD
 git clone https://github.com/AshishKY22/documind-ai.git
+=======
+git clone <your-repo-url>
+>>>>>>> 02e1328262aeb8032ba6675f31f780ea413bb3b9
 cd documind-ai
 npm install
 ```
@@ -107,4 +121,8 @@ Deployed on Vercel, connected directly to this GitHub repository — pushes to `
 
 ---
 
+<<<<<<< HEAD
 Built as a portfolio project to explore RAG pipelines, vector search, and full-stack Next.js.
+=======
+Built as a portfolio project to explore RAG pipelines, vector search, and full-stack Next.js.
+>>>>>>> 02e1328262aeb8032ba6675f31f780ea413bb3b9
