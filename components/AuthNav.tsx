@@ -13,7 +13,10 @@ export default function AuthNav() {
   if (isSignedIn) {
     return (
       <>
-        <Link href="/dashboard" className="text-sm font-medium hover:text-gray-600">
+        <Link
+          href="/dashboard"
+          className="rounded-full border border-gray-300 px-4 py-1.5 text-sm font-medium hover:border-gray-400 hover:bg-gray-50"
+        >
           Dashboard
         </Link>
         <UserButton />
