@@ -57,17 +57,15 @@ model Message {
 }
 
 model Subscription {
-  id                   String             @id @default(cuid())
-  stripeCustomerId     String             @unique
-  stripeSubscriptionId String?            @unique
-  stripePriceId        String?
-  status               SubscriptionStatus @default(INCOMPLETE)
-  tier                 SubscriptionTier   @default(FREE)
-  currentPeriodEnd     DateTime?
-  createdAt            DateTime           @default(now())
-  updatedAt            DateTime           @updatedAt
-  userId               String             @unique
-  user                 User               @relation(fields: [userId], references: [id], onDelete: Cascade)
+  id                      String             @id @default(cuid())
+  razorpaySubscriptionId  String             @unique
+  status                  SubscriptionStatus @default(INCOMPLETE)
+  tier                    SubscriptionTier   @default(FREE)
+  currentPeriodEnd        DateTime?
+  createdAt               DateTime           @default(now())
+  updatedAt               DateTime           @updatedAt
+  userId                  String             @unique
+  user                    User               @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
 enum DocumentStatus {
