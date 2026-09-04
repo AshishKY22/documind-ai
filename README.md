@@ -4,7 +4,7 @@ Chat with your documents. Upload PDFs, DOCX, or TXT files and ask questions in n
 
 **Live demo:** [documind-ai-henna.vercel.app](https://documind-ai-henna.vercel.app)
 
----
+
 
 ## What Makes This Different
 
@@ -12,7 +12,7 @@ Most "chat with your documents" apps treat every conversation as an island — c
 
 Ask it something in one document, then open an entirely different document a week later and ask "what did I say my favorite topic was?" — it remembers, without you ever re-explaining yourself. It's the difference between a document Q&A tool and something that actually accumulates knowledge about you over time.
 
----
+
 
 ## Features
 
