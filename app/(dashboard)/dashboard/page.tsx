@@ -12,6 +12,7 @@ import {
   Pie,
   Cell,
 } from "recharts";
+import { UpgradeButton } from "@/components/UpgradeButton";
 
 type UsageData = {
   stats: {
@@ -100,7 +101,16 @@ export default function DashboardPage() {
         <StatCard label="Documents" value={String(stats.totalDocuments)} />
         <StatCard label="Queries asked" value={String(stats.totalQueries)} />
         <StatCard label="Storage used" value={formatBytes(stats.storageUsedBytes)} />
-        <StatCard label="Current plan" value={stats.currentPlan} />
+
+        <div className="flex flex-col gap-1 border-b border-zinc-200 pb-4 sm:border-b-0 sm:border-r sm:pb-0 sm:pr-6 last:border-r-0 last:pr-0">
+          <span className="text-sm text-zinc-500">Current plan</span>
+          <span className="text-3xl font-serif text-zinc-900">{stats.currentPlan}</span>
+          {stats.currentPlan === "FREE" && (
+            <div className="mt-2">
+              <UpgradeButton />
+            </div>
+          )}
+        </div>
       </div>
 
       {/* Charts */}
