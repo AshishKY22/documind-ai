@@ -34,10 +34,16 @@ export async function POST(req: Request) {
   if (eventType === "user.created") {
     const { id, email_addresses, first_name, last_name } = evt.data;
 
+    const primaryEmail = email_addresses?.[0]?.email_address;
+
+    if (!primaryEmail) {
+      return new Response("Error: No email address found on user", { status: 400 });
+    }
+
     await prisma.user.create({
       data: {
         clerkId: id,
-        email: email_addresses[0].email_address,
+        email: primaryEmail,
         name: `${first_name || ""} ${last_name || ""}`.trim() || null,
       },
     });
