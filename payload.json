@@ -1,0 +1,13 @@
+{
+  "event": "subscription.cancelled",
+  "payload": {
+    "subscription": {
+      "entity": {
+        "id": "sub_test123456",
+        "notes": {
+          "clerkUserId": "user_3IYiMoxkSQPpBu7V6AHGQ6O8ijy"
+        }
+      }
+    }
+  }
+}

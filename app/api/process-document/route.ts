@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { pineconeIndex } from "@/lib/pinecone";
 import { auth } from "@clerk/nextjs/server";
-import { PDFParse } from "pdf-parse";
+import { extractText, getDocumentProxy } from "unpdf";
 import { GoogleGenAI } from "@google/genai";
 
 const genai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
@@ -58,10 +58,8 @@ export async function POST(req: NextRequest) {
     const response = await fetch(document.url);
     const buffer = await response.arrayBuffer();
 
-    const parser = new PDFParse({ data: Buffer.from(buffer) });
-    const result = await parser.getText();
-    const text = result.text;
-    await parser.destroy();
+    const pdf = await getDocumentProxy(new Uint8Array(buffer));
+    const { text } = await extractText(pdf, { mergePages: true });
 
     // 4. Split into chunks
     const chunks = splitTextIntoChunks(text, 1000, 200);
@@ -95,8 +93,6 @@ export async function POST(req: NextRequest) {
     );
 
     // 6. Upsert to Pinecone (in user's namespace)
-    // If your Pinecone SDK version expects a plain array rather than
-    // { records: [...] }, use: await pineconeIndex.namespace(userId).upsert(embeddings);
     await pineconeIndex.namespace(userId).upsert({ records: embeddings });
 
     // 7. Update document status to READY
