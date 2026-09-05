@@ -8,13 +8,13 @@ export default function DashboardLayout({
   children: React.ReactNode;
 }) {
   return (
-    <div className="flex min-h-screen">
+    <div className="flex min-h-screen bg-background text-foreground">
       {/* Sidebar */}
-      <aside className="w-64 border-r bg-gray-50 p-6">
-        <Link href="/" className="text-xl font-bold">
+      <aside className="w-64 border-r border-border bg-sidebar p-6">
+        <Link href="/" className="text-xl font-bold text-sidebar-foreground">
           DocuMind AI
         </Link>
-        
+
         <nav className="mt-8 flex flex-col gap-2">
           <SidebarLink href="/dashboard" icon={<LayoutDashboard className="h-4 w-4" />}>
             Dashboard
@@ -33,10 +33,10 @@ export default function DashboardLayout({
 
       {/* Main Content */}
       <div className="flex flex-1 flex-col">
-        <header className="flex h-16 items-center justify-end border-b bg-white px-8">
+        <header className="flex h-16 items-center justify-end border-b border-border bg-background px-8">
           <AuthNav />
         </header>
-        <main className="flex-1 p-8">{children}</main>
+        <main className="flex-1 p-8 bg-background text-foreground">{children}</main>
       </div>
     </div>
   );
@@ -46,7 +46,7 @@ function SidebarLink({ href, icon, children }: { href: string; icon: React.React
   return (
     <Link
       href={href}
-      className="flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium text-gray-700 hover:bg-gray-100"
+      className="flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium text-sidebar-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground"
     >
       {icon}
       {children}
